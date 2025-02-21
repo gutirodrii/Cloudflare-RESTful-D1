@@ -1,0 +1,11 @@
+name = "d1-restful-api"
+main = "src/index.ts"
+compatibility_date = "2025-02-18"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "d1-p1-dan"
+database_id = "07523e7e-502c-4eca-b103-83b24011714c"
+
+[observability.logs]
+enabled = true
