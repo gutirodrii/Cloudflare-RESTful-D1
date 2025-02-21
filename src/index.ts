@@ -14,30 +14,27 @@ export default {
 		const { pathname, search, searchParams } = new URL(request.url);
 
 		if (method === 'POST') {
-
 			const respond = await respondRequest(request, env, pathname, search, searchParams, true, false, false, false);
 			return respond;
-		}
-
-		else if (method === 'GET') {
-
+		} else if (method === 'OPTIONS') {
+			return new Response(null, {
+				status: 204,
+				headers: {
+					'Access-Control-Allow-Origin': '*',
+					'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+					'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+				},
+			});
+		} else if (method === 'GET') {
 			const respond = await respondRequest(request, env, pathname, search, searchParams, false, true, false, false);
 			return respond;
-		}
-
-		else if (method === 'PUT') {
-
+		} else if (method === 'PUT') {
 			const respond = await respondRequest(request, env, pathname, search, searchParams, false, false, true, false);
 			return respond;
-		}
-
-		else if (method === 'DELETE') {
-
+		} else if (method === 'DELETE') {
 			const respond = await respondRequest(request, env, pathname, search, searchParams, false, false, false, true);
 			return respond;
-		}
-
-		else {
+		} else {
 			return notAllowed();
 		}
 	},

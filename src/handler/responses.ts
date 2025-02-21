@@ -7,7 +7,7 @@ export function serverRoot(): Response {
 export function returnJson(data: any): Response {
 	return new Response(data, {
 		status: 200,
-		headers: { 'Content-Type': 'application/json' },
+		headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
 	});
 }
 
