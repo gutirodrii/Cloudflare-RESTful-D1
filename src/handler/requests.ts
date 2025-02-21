@@ -92,6 +92,61 @@ export async function respondRequest(
 			return notAllowed();
 		}
 	}
+	// ====== Guides Endpoints ====== //
+	if (path.endsWith('/recursos') && !search) {
+		const table = 'recursos';
+		if (is_post) {
+			let reqData;
+			try {
+				reqData = (await req.json()) as { name: string; url: string; img: string; type:string };
+				const { name, url, img, type } = reqData;
+				if (!name || !url) {
+					return badEntity();
+				}
+			} catch (e) {
+				console.log(e);
+				return badEntity();
+			}
+			const response = await insertRowInTable(env, reqData, table);
+			return response;
+		} else if (is_get) {
+			const details = await getDataByTable(env, table);
+			if (details) {
+				return returnJson(details);
+			}
+			return notFound();
+		} else if (is_delete) {
+			const response = await dropEntireTable(env, table);
+			return response;
+		} else {
+			return notAllowed();
+		}
+	} else if (path.startsWith('/recursos/') && !search) {
+		const table = 'recursos';
+		const guideID = decodeURIComponent(path.split('/')[2]);
+		if (is_get) {
+			const response = await getRowByID(env, guideID, table);
+			return response;
+		} else if (is_put) {
+			let newData;
+			try {
+				newData = (await req.json()) as { name?: string; url?: string; img?: string; type?:string };
+				if (!newData.name && !newData.url) {
+					return badEntity();
+				}
+			} catch (e) {
+				console.log(e);
+				return badEntity();
+			}
+			const response = await updateRowById(env, guideID, newData, table);
+			return response;
+		} else if (is_delete) {
+			const response = await deleteRowById(env, guideID, table);
+			return response;
+		} else {
+			return notAllowed();
+		}
+	}
 
 	// ====== Channels Endpoints ====== //
 	if (path.endsWith('/channels') && !search) {
