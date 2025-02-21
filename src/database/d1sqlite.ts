@@ -11,7 +11,7 @@ export function convertToJSON(data: any): any {
 	const [id, collection, results, time, success] = data;
 	return JSON.stringify({ id: id, collection: collection, results: results, time: time, success: success });
 }
-
+//
 export async function getDataByTable(env: Env, table: string): Promise<any> {
 	try {
 		const stmt = env.DB.prepare(`SELECT * FROM ${table}`);
