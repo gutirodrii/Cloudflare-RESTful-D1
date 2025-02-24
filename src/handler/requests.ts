@@ -124,6 +124,7 @@ export async function respondRequest(
 	} else if (path.startsWith('/videos/') && !search) {
 		const table = 'videos';
 		const guideID = decodeURIComponent(path.split('/')[2].split('.')[0]);
+		console.log(guideID)
 		if (is_get) {
 			const response = await getRowByCol(env, 'src', guideID, table);
 			return response;
