@@ -123,9 +123,9 @@ export async function respondRequest(
 		}
 	} else if (path.startsWith('/videos/') && !search) {
 		const table = 'videos';
-		const guideID = decodeURIComponent(path.split('/')[2]);
+		const guideID = decodeURIComponent(path.split('/')[2].split('.')[0]);
 		if (is_get) {
-			const response = await getRowByID(env, guideID, table);
+			const response = await getRowByCol(env, 'src', guideID, table);
 			return response;
 		} else if (is_put) {
 			let newData;
