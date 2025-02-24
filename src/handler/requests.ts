@@ -93,6 +93,61 @@ export async function respondRequest(
 		}
 	}
 	// ====== Guides Endpoints ====== //
+	if (path.endsWith('/videos') && !search) {
+		const table = 'videos';
+		if (is_post) {
+			let reqData;
+			try {
+				reqData = (await req.json()) as { title: string; description: string; thumbnail: string; src: string };
+				const { title, description, thumbnail, src } = reqData;
+				if (!title || !thumbnail || !src) {
+					return badEntity();
+				}
+			} catch (e) {
+				console.log(e);
+				return badEntity();
+			}
+			const response = await insertRowInTable(env, reqData, table);
+			return response;
+		} else if (is_get) {
+			const details = await getDataByTable(env, table);
+			if (details) {
+				return returnJson(details);
+			}
+			return notFound();
+		} else if (is_delete) {
+			const response = await dropEntireTable(env, table);
+			return response;
+		} else {
+			return notAllowed();
+		}
+	} else if (path.startsWith('/videos/') && !search) {
+		const table = 'videos';
+		const guideID = decodeURIComponent(path.split('/')[2]);
+		if (is_get) {
+			const response = await getRowByID(env, guideID, table);
+			return response;
+		} else if (is_put) {
+			let newData;
+			try {
+				newData = (await req.json()) as { title?: string; content?: string };
+				if (!newData.title && !newData.content) {
+					return badEntity();
+				}
+			} catch (e) {
+				console.log(e);
+				return badEntity();
+			}
+			const response = await updateRowById(env, guideID, newData, table);
+			return response;
+		} else if (is_delete) {
+			const response = await deleteRowById(env, guideID, table);
+			return response;
+		} else {
+			return notAllowed();
+		}
+	}
+	// ====== Guides Endpoints ====== //
 	if (path.endsWith('/recursos') && !search) {
 		const table = 'recursos';
 		if (is_post) {
